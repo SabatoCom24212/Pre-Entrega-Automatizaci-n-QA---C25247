@@ -40,7 +40,7 @@ class TestNavigation:
     def test_productos_visibles(self):
         driver = self.driver
         
-        productos = driver.find_elements(By.CLASS_NAME, "inventory_item")
+        productos = driver.find_elements(By.CLASS_NAME, PRODUCT_ITEM)
         
         assert len(productos) > 0, "No se encontraron productos en la página"
     
