@@ -10,6 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datos.usuario import USUARIO_PRINCIPAL
+from utils.locators import USERNAME_INPUT, PASSWORD_INPUT, LOGIN_BUTTON
 
 
 class TestLogin:
@@ -33,13 +34,13 @@ class TestLogin:
         assert "Swag Labs" in driver.title, "No se cargó la página de login"
         
         username_field = wait.until(
-            EC.presence_of_element_located((By.ID, "user-name"))
+            EC.presence_of_element_located((By.ID, USERNAME_INPUT))
         )
         password_field = wait.until(
-            EC.presence_of_element_located((By.ID, "password"))
+            EC.presence_of_element_located((By.ID, PASSWORD_INPUT))
         )
         login_button = wait.until(
-            EC.element_to_be_clickable((By.ID, "login-button"))
+            EC.element_to_be_clickable((By.ID, LOGIN_BUTTON))
         )
         
         username_field.send_keys(USUARIO_PRINCIPAL["username"])
