@@ -15,6 +15,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from datos.usuario import USUARIO_PRINCIPAL
+from utils.locators import CART_BADGE, ADD_TO_CART_BACKPACK, CART_LINK, CART_ITEM, CART_ITEM_NAME
 from utils.helpers import login
 
 class TestCart:
@@ -25,7 +26,6 @@ class TestCart:
         self.driver.maximize_window()
         self.driver.implicitly_wait(10)
         
-        # Login automático
         login(self.driver, 
               USUARIO_PRINCIPAL["username"], 
               USUARIO_PRINCIPAL["password"])
@@ -34,40 +34,37 @@ class TestCart:
         self.driver.quit()
     
     def test_agregar_producto_al_carrito(self):
-        """
-        Agrega primer producto y verifica item en carrito
-        """
         driver = self.driver
         
         try:
-            badge_inicial = driver.find_element(By.CLASS_NAME, "shopping_cart_badge")
+            badge_inicial = driver.find_element(By.CLASS_NAME, CART_BADGE)
             count_inicial = int(badge_inicial.text)
         except:
             count_inicial = 0
         
         boton_agregar = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.ID, "add-to-cart-sauce-labs-backpack"))
+            EC.element_to_be_clickable((By.ID, ADD_TO_CART_BACKPACK))
         )
         boton_agregar.click()
         
         badge = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "shopping_cart_badge"))
+            EC.visibility_of_element_located((By.CLASS_NAME, CART_BADGE))
         )
         count_nuevo = int(badge.text)
         
         assert count_nuevo == count_inicial + 1, \
             f"El contador no se incrementó correctamente. Esperado: {count_inicial + 1}, Actual: {count_nuevo}"
         
-        carrito_link = driver.find_element(By.CLASS_NAME, "shopping_cart_link")
+        carrito_link = driver.find_element(By.CLASS_NAME, CART_LINK)
         carrito_link.click()
         
         WebDriverWait(driver, 10).until(
             EC.url_contains("cart.html")
         )
         
-        items_carrito = driver.find_elements(By.CLASS_NAME, "cart_item")
+        items_carrito = driver.find_elements(By.CLASS_NAME, CART_ITEM)
         assert len(items_carrito) > 0, "No hay productos en el carrito"
         
-        nombre_en_carrito = driver.find_element(By.CLASS_NAME, "inventory_item_name").text
+        nombre_en_carrito = driver.find_element(By.CLASS_NAME, CART_ITEM_NAME).text
         assert "Backpack" in nombre_en_carrito, \
             f"El producto en el carrito no es el esperado: {nombre_en_carrito}"
