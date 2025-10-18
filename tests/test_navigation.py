@@ -12,7 +12,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from datos.usuario import USUARIO_PRINCIPAL
 from utils.helpers import login
-from utils.locators import PRODUCT_ITEM, PRODUCT_NAME, PRODUCT_PRICE, SORT_CONTAINER, MENU_BUTTON, CART_LINK
 class TestNavigation:
     
     @pytest.fixture(autouse=True)
@@ -39,17 +38,17 @@ class TestNavigation:
     
     def test_productos_visibles(self):
         driver = self.driver
-        
-        productos = driver.find_elements(By.CLASS_NAME, PRODUCT_ITEM)
-        
+
+        productos = driver.find_elements(By.CLASS_NAME, "inventory_item")
+
         assert len(productos) > 0, "No se encontraron productos en la página"
     
     def test_primer_producto_detalles(self):
         driver = self.driver
-        primer_producto = driver.find_element(By.CLASS_NAME, PRODUCT_ITEM)
+        primer_producto = driver.find_element(By.CLASS_NAME, "inventory_item")
         
-        nombre = primer_producto.find_element(By.CLASS_NAME, PRODUCT_NAME).text
-        precio = primer_producto.find_element(By.CLASS_NAME, PRODUCT_PRICE).text
+        nombre = primer_producto.find_element(By.CLASS_NAME, "inventory_item_name").text
+        precio = primer_producto.find_element(By.CLASS_NAME, "inventory_item_price").text
         
         assert nombre != "", "El nombre del producto está vacío"
         assert precio != "", "El precio del producto está vacío"
@@ -57,11 +56,11 @@ class TestNavigation:
     
     def test_elementos_interfaz_presentes(self):
         driver = self.driver
-        menu = driver.find_element(By.ID, MENU_BUTTON)
+        menu = driver.find_element(By.ID, "react-burger-menu-btn")
         assert menu.is_displayed(), "El menú no está visible"
         
-        sort_selector = driver.find_element(By.CLASS_NAME, SORT_CONTAINER)
+        sort_selector = driver.find_element(By.CLASS_NAME, "product_sort_container")
         assert sort_selector.is_displayed(), "El selector de orden no está visible"
         
-        carrito = driver.find_element(By.CLASS_NAME, CART_LINK)
+        carrito = driver.find_element(By.CLASS_NAME, "shopping_cart_link")
         assert carrito.is_displayed(), "El carrito no está visible"
